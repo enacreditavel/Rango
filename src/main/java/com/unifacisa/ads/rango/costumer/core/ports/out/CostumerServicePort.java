@@ -1,4 +1,6 @@
-package com.unifacisa.ads.rango.costumer.core;
+package com.unifacisa.ads.rango.costumer.core.ports.out;
+
+import com.unifacisa.ads.rango.costumer.core.Costumer;
 
 import java.util.UUID;
 

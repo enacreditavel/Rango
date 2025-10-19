@@ -1,7 +1,7 @@
 package com.unifacisa.ads.rango.costumer.adapters;
 
 import com.unifacisa.ads.rango.costumer.core.Costumer;
-import com.unifacisa.ads.rango.costumer.core.CostumerServicePort;
+import com.unifacisa.ads.rango.costumer.core.ports.out.CostumerServicePort;
 import com.unifacisa.ads.rango.infrastructure.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;

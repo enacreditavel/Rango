@@ -1,6 +1,6 @@
 package com.unifacisa.ads.rango.costumer.adapters;
 
-import com.unifacisa.ads.rango.costumer.core.CostumerUseCasePort;
+import com.unifacisa.ads.rango.costumer.core.ports.in.*;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -15,35 +15,39 @@ import java.util.UUID;
 public class CostumerController {
 
     private final Logger logger = LoggerFactory.getLogger(CostumerController.class);
-    private final CostumerUseCasePort costumerUseCasePort;
+    private final CreateCostumerUseCasePort createCostumerUseCasePort;
+    private final FindCostumerByIdUseCasePort findCostumerByIdUseCasePort;
+    private final FindCostumerByCpfUseCasePort findCostumerByCpfUseCasePort;
+    private final UpdateCostumerByIdUseCasePort updateCostumerByIdUseCasePort;
+    private final DeleteCostumerByIdUseCasePort deleteCostumerByIdUseCasePort;
     private final CostumerMapper mapper;
     
     @PostMapping
     public ResponseEntity<CostumerResponse> create(@RequestBody CostumerRequest costumerRequest){
         return ResponseEntity.ok()
                 .body(mapper.costumerToResponse(
-                        costumerUseCasePort.createCostumer(
+                        createCostumerUseCasePort.execute(
                                 mapper.requestToCostumer(costumerRequest))));
     }
 
     @GetMapping
     public ResponseEntity<CostumerResponse> findCostumerByCpf(@RequestParam String cpf){
-        return ResponseEntity.ok().body(mapper.costumerToResponse(costumerUseCasePort.findCostumerByCpf(cpf)));
+        return ResponseEntity.ok().body(mapper.costumerToResponse(findCostumerByCpfUseCasePort.execute(cpf)));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<CostumerResponse> findCostumerById(@PathVariable UUID id){
-        return ResponseEntity.ok().body(mapper.costumerToResponse(costumerUseCasePort.findCostumerById(id)));
+        return ResponseEntity.ok().body(mapper.costumerToResponse(findCostumerByIdUseCasePort.execute(id)));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteCostumerById(@PathVariable UUID id){
-        costumerUseCasePort.deleteCostumer(id);
+        deleteCostumerByIdUseCasePort.execute(id);
         return ResponseEntity.noContent().build();
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<CostumerResponse> updateCostumerById(@PathVariable UUID id, @RequestBody CostumerRequest costumerRequest){
-        return ResponseEntity.ok().body(mapper.costumerToResponse(costumerUseCasePort.updateCostumer(id, costumerRequest)));
+        return ResponseEntity.ok().body(mapper.costumerToResponse(updateCostumerByIdUseCasePort.execute(id, costumerRequest)));
     }
 }
