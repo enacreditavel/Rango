@@ -6,7 +6,7 @@ import com.unifacisa.ads.rango.products.core.Product;
 import com.unifacisa.ads.rango.products.core.ProductCategoryEnum;
 import com.unifacisa.ads.rango.products.core.ports.in.CreateProductUseCasePort;
 import com.unifacisa.ads.rango.products.core.ports.out.ProductServicePort;
-import com.unifacisa.ads.rango.restaurant.core.RestaurantServicePort;
+import com.unifacisa.ads.rango.restaurant.core.ports.out.RestaurantServicePort;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;

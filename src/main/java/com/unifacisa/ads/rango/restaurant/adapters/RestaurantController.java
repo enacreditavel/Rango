@@ -1,16 +1,13 @@
 package com.unifacisa.ads.rango.restaurant.adapters;
 
 
-import com.unifacisa.ads.rango.restaurant.core.Restaurant;
-import com.unifacisa.ads.rango.restaurant.core.RestaurantUseCasePort;
+import com.unifacisa.ads.rango.restaurant.core.ports.in.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -18,7 +15,11 @@ import java.util.UUID;
 @RequiredArgsConstructor
 public class RestaurantController {
 
-    private final RestaurantUseCasePort restaurantUseCasePort;
+    private final CreateRestaurantUsecasePort createRestaurantUsecasePort;
+    private final FindRestaurantByIdUseCasePort findRestaurantByIdUseCasePort;
+    private final FindAllRestaurantsUseCasePort findAllRestaurantsUseCasePort;
+    private final UpdateRestaurantByIdUseCasePort updateRestaurantByIdUseCasePort;
+    private final DeleteRestaurantByIdUseCasePort deleteRestaurantByIdUseCasePort;
 
     private final RestaurantMapper mapper;
 
@@ -27,7 +28,7 @@ public class RestaurantController {
         return ResponseEntity
                 .status(HttpStatus.CREATED.value())
                 .body(mapper.restaurantToResponse(
-                        restaurantUseCasePort.createRestaurant(
+                        createRestaurantUsecasePort.execute(
                                 mapper.requestToRestaurant(restaurantRequest))));
     }
 
@@ -35,22 +36,19 @@ public class RestaurantController {
     public ResponseEntity<RestaurantResponse> findRestaurantById(@PathVariable UUID id){
         return ResponseEntity
                 .status(HttpStatus.OK.value())
-                .body(mapper.restaurantToResponse(restaurantUseCasePort.findRestaurantById(id)));
+                .body(mapper.restaurantToResponse(findRestaurantByIdUseCasePort.execute(id)));
     }
 
     @GetMapping
     public ResponseEntity<Page<RestaurantResponse>> findAllRestaurants(@RequestParam int page, @RequestParam int size ){
-        Page<Restaurant> restaurantPage = restaurantUseCasePort.findAllRestaurants(page, size);
-        List<RestaurantResponse> restaurantResponseList = mapper.restaurantListToResponse(restaurantPage.getContent());
-        Page<RestaurantResponse> restaurantResponsePage = new PageImpl<>(restaurantResponseList, restaurantPage.getPageable(), restaurantPage.getTotalElements());
         return ResponseEntity
                 .status(HttpStatus.OK.value())
-                .body(restaurantResponsePage);
+                .body(findAllRestaurantsUseCasePort.execute(page, size).map(mapper::restaurantToResponse));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<String> deleteRestaurant(@PathVariable UUID id){
-        restaurantUseCasePort.deleteRestaurantById(id);
+        deleteRestaurantByIdUseCasePort.execute(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).body("Restaurant removed successfully");
     }
 
@@ -58,7 +56,7 @@ public class RestaurantController {
     public ResponseEntity<RestaurantResponse> updateRestaurant(@PathVariable UUID id, @RequestBody RestaurantRequest restaurantRequest){
         return ResponseEntity.status(HttpStatus.OK.value())
                              .body(mapper.restaurantToResponse(
-                                     restaurantUseCasePort.updateRestaurant(id, restaurantRequest)));
+                                     updateRestaurantByIdUseCasePort.execute(id, restaurantRequest)));
     }
 
 }

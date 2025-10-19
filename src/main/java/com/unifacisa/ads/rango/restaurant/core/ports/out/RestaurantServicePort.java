@@ -1,5 +1,6 @@
-package com.unifacisa.ads.rango.restaurant.core;
+package com.unifacisa.ads.rango.restaurant.core.ports.out;
 
+import com.unifacisa.ads.rango.restaurant.core.Restaurant;
 import org.springframework.data.domain.Page;
 
 import java.util.UUID;
