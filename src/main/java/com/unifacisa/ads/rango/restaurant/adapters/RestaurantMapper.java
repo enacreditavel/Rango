@@ -1,29 +1,41 @@
 package com.unifacisa.ads.rango.restaurant.adapters;
 
 import com.unifacisa.ads.rango.restaurant.core.Restaurant;
+import com.unifacisa.ads.rango.user.adapters.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
+import org.springframework.stereotype.Component;
 
 import java.util.List;
 
 @RequiredArgsConstructor
+@Component
 public class RestaurantMapper {
     
     private final ModelMapper mapper;
+    private final UserMapper userMapper;
 
     public Restaurant entityToRestaurant(RestaurantEntity restaurantEntity){
-        return  mapper.map(restaurantEntity, Restaurant.class);
+        Restaurant restaurant = mapper.map(restaurantEntity, Restaurant.class);
+        restaurant.setUser(userMapper.entityToUser(restaurantEntity.getUserEntity()));
+        return restaurant;
     }
     public RestaurantEntity restaurantToEntity(Restaurant restaurant){
-        return mapper.map(restaurant, RestaurantEntity.class);
+        RestaurantEntity restaurantEntity = mapper.map(restaurant, RestaurantEntity.class);
+        restaurantEntity.setUserEntity(userMapper.userToEntity(restaurant.getUser()));
+        return restaurantEntity;
     }
 
     public Restaurant requestToRestaurant(RestaurantRequest restaurantRequest){
-        return  mapper.map(restaurantRequest, Restaurant.class);
+        Restaurant restaurant = mapper.map(restaurantRequest, Restaurant.class);
+        restaurant.setUser(userMapper.requestToUser(restaurantRequest.getUserRequest()));
+        return  restaurant;
     }
 
     public RestaurantResponse restaurantToResponse(Restaurant restaurant){
-        return mapper.map(restaurant, RestaurantResponse.class);
+        RestaurantResponse restaurantResponse = mapper.map(restaurant, RestaurantResponse.class);
+        restaurantResponse.setEmail(restaurant.getUser().getEmail());
+        return restaurantResponse;
     }
 
     public List<RestaurantResponse> restaurantListToResponse(List<Restaurant> restaurantList) {

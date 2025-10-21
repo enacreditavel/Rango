@@ -1,29 +1,31 @@
 package com.unifacisa.ads.rango.costumer.core;
 
+import com.unifacisa.ads.rango.user.core.User;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
 public class Costumer {
 
-    UUID id;
+    private UUID id;
 
-    String name;
+    private String name;
 
-    String cpf;
+    private String cpf;
 
-    String email;
+    private User user;
 
-    LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
     public Costumer() {
     }
 
-    public Costumer(UUID id, String name, String cpf, String email, LocalDateTime createdAt) {
+    public Costumer(UUID id, String name, String cpf, User user, LocalDateTime createdAt) {
         this.id = id;
         this.name = name;
         this.cpf = cpf;
-        this.email = email;
+        this.user = user;
         this.createdAt = createdAt;
     }
 
@@ -51,12 +53,12 @@ public class Costumer {
         this.cpf = cpf;
     }
 
-    public String getEmail() {
-        return email;
+    public User getUser() {
+        return user;
     }
 
-    public void setEmail(String email) {
-        this.email = email;
+    public void setUser(User user) {
+        this.user = user;
     }
 
     public LocalDateTime getCreatedAt() {
@@ -71,12 +73,12 @@ public class Costumer {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Costumer costumer = (Costumer) o;
-        return Objects.equals(id, costumer.id) && Objects.equals(name, costumer.name) && Objects.equals(cpf, costumer.cpf) && Objects.equals(email, costumer.email) && Objects.equals(createdAt, costumer.createdAt);
+        return Objects.equals(id, costumer.id) && Objects.equals(name, costumer.name) && Objects.equals(cpf, costumer.cpf) && Objects.equals(user, costumer.user) && Objects.equals(createdAt, costumer.createdAt);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, cpf, email, createdAt);
+        return Objects.hash(id, name, cpf, user, createdAt);
     }
 
     @Override
@@ -85,7 +87,6 @@ public class Costumer {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", cpf='" + cpf + '\'' +
-                ", email='" + email + '\'' +
                 ", createdAt=" + createdAt +
                 '}';
     }

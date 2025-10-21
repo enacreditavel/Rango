@@ -1,6 +1,7 @@
 package com.unifacisa.ads.rango.costumer.adapters;
 
 import com.unifacisa.ads.rango.costumer.core.Costumer;
+import com.unifacisa.ads.rango.user.adapters.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
@@ -11,20 +12,29 @@ import java.util.List;
 @RequiredArgsConstructor
 public class CostumerMapper {
     private final ModelMapper mapper;
+    private final UserMapper userMapper;
 
     public Costumer entityToCostumer(CostumerEntity costumerEntity){
-        return  mapper.map(costumerEntity, Costumer.class);
+        Costumer costumer = mapper.map(costumerEntity, Costumer.class);
+        costumer.setUser(userMapper.entityToUser(costumerEntity.getUserEntity()));
+        return costumer;
     }
     public CostumerEntity costumerToEntity(Costumer costumer){
-        return mapper.map(costumer, CostumerEntity.class);
+        CostumerEntity costumerEntity = mapper.map(costumer, CostumerEntity.class);
+        costumerEntity.setUserEntity(userMapper.userToEntity(costumer.getUser()));
+        return costumerEntity;
     }
 
     public Costumer requestToCostumer(CostumerRequest costumerRequest){
-        return  mapper.map(costumerRequest, Costumer.class);
+        Costumer costumer = mapper.map(costumerRequest, Costumer.class);
+        costumer.setUser(userMapper.requestToUser(costumerRequest.getUserRequest()));
+        return costumer;
     }
 
     public CostumerResponse costumerToResponse(Costumer costumer){
-        return mapper.map(costumer, CostumerResponse.class);
+        CostumerResponse costumerResponse = mapper.map(costumer, CostumerResponse.class);
+        costumerResponse.setEmail(costumer.getUser().getEmail());
+        return costumerResponse;
     }
 
     public List<CostumerResponse> costumerListToResponse(List<Costumer> productList) {

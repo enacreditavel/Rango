@@ -1,15 +1,24 @@
 package com.unifacisa.ads.rango.restaurant.adapters;
 
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
 
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class RestaurantResponse {
 
-    UUID id;
+    private UUID id;
 
-    String name;
+    private String name;
 
-    String description;
+    private String description;
 
-    LocalDateTime createdAt;
+    private String email;
+
+    private LocalDateTime createdAt;
 }

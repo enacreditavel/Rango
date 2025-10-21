@@ -5,18 +5,19 @@ import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Data
 public class CostumerResponse {
-    Long id;
+    private UUID id;
 
-    String name;
+    private String name;
 
-    String cpf;
+    private String cpf;
 
-    String email;
+    private String email;
 
-    LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
 }

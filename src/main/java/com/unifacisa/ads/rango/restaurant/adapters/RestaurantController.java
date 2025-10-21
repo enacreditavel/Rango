@@ -2,6 +2,7 @@ package com.unifacisa.ads.rango.restaurant.adapters;
 
 
 import com.unifacisa.ads.rango.restaurant.core.ports.in.*;
+import com.unifacisa.ads.rango.user.adapters.UserMapper;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
@@ -22,6 +23,7 @@ public class RestaurantController {
     private final DeleteRestaurantByIdUseCasePort deleteRestaurantByIdUseCasePort;
 
     private final RestaurantMapper mapper;
+    private final UserMapper userMapper;
 
     @PostMapping
     public ResponseEntity<RestaurantResponse> createRestaurant(@RequestBody RestaurantRequest restaurantRequest){

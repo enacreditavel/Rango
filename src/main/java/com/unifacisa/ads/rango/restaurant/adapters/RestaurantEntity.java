@@ -1,15 +1,30 @@
 package com.unifacisa.ads.rango.restaurant.adapters;
 
+import com.unifacisa.ads.rango.user.adapters.UserEntity;
+import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
+
 import java.time.LocalDateTime;
 import java.util.UUID;
-
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
+@Entity
+@Table(name = "restaurants")
 public class RestaurantEntity {
-    UUID id;
+    @Id
+    private UUID id;
 
-    String name;
+    private String name;
 
-    String description;
+    private String description;
 
-    LocalDateTime createdAt;
+    @OneToOne
+    @JoinColumn(name = "user_email")
+    private UserEntity userEntity;
+
+    private LocalDateTime createdAt;
 
 }

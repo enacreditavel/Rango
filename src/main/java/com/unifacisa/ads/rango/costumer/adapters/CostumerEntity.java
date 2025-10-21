@@ -1,10 +1,12 @@
 package com.unifacisa.ads.rango.costumer.adapters;
 
+import com.unifacisa.ads.rango.user.adapters.UserEntity;
 import jakarta.persistence.*;
 import lombok.Data;
 import lombok.RequiredArgsConstructor;
 
 import java.time.LocalDateTime;
+import java.util.UUID;
 
 @RequiredArgsConstructor
 @Data
@@ -12,15 +14,17 @@ import java.time.LocalDateTime;
 @Table(name = "costumer")
 public class CostumerEntity {
 
-    @Id @GeneratedValue
-    Long id;
+    @Id
+    private UUID id;
 
-    String name;
+    private String name;
 
-    String cpf;
+    private String cpf;
 
-    String email;
+    @OneToOne
+    @JoinColumn(name = "userId")
+    private UserEntity userEntity;
 
-    LocalDateTime createdAt;
+    private LocalDateTime createdAt;
 
 }

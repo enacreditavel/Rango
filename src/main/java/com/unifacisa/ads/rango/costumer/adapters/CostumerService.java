@@ -27,11 +27,6 @@ public class CostumerService implements CostumerServicePort {
     }
 
     @Override
-    public boolean existsByCpf(String cpf) {
-        return costumerRepository.existsByCpf(cpf);
-    }
-
-    @Override
     public Costumer findById(UUID id) {
         CostumerEntity costumerEntity = costumerRepository.findById(id)
                 .orElseThrow(() -> new NotFoundException("None costumer found by Id: "+id));
@@ -48,6 +43,11 @@ public class CostumerService implements CostumerServicePort {
         CostumerEntity costumerEntity = costumerRepository.findByCpf(cpf)
                 .orElseThrow(() -> new NotFoundException("None costumer found by CPF: " + cpf));
         return mapper.entityToCostumer(costumerEntity);
+    }
+
+    @Override
+    public boolean existsByCpf(String cpf) {
+        return costumerRepository.existsByCpf(cpf);
     }
 
     @Override

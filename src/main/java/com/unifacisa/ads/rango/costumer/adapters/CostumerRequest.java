@@ -1,13 +1,17 @@
 package com.unifacisa.ads.rango.costumer.adapters;
 
+import com.unifacisa.ads.rango.user.adapters.UserRequest;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
-@Data @RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class CostumerRequest {
-    String name;
+    private String name;
 
-    String cpf;
+    private String cpf;
 
-    String email;
+    private UserRequest userRequest;
 }

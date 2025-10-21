@@ -5,13 +5,13 @@ import com.unifacisa.ads.rango.infrastructure.exceptions.BadRequestException;
 import com.unifacisa.ads.rango.infrastructure.exceptions.NotFoundException;
 import feign.FeignException;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
-
     @ExceptionHandler(NotFoundException.class)
     @ResponseStatus(HttpStatus.NOT_FOUND)
     public ErrorResponse handleNotFoundException(NotFoundException ex) {
@@ -34,6 +34,12 @@ public class GlobalExceptionHandler {
     @ResponseStatus(HttpStatus.GATEWAY_TIMEOUT)
     public ErrorResponse handleFeignGatewayTimeOutException(FeignException.GatewayTimeout ex) {
         return new ErrorResponse(ex.getMessage(), HttpStatus.GATEWAY_TIMEOUT.value());
+    }
+
+    @ExceptionHandler(BadCredentialsException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleFeignGatewayTimeOutException(BadCredentialsException ex) {
+        return new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 
 }

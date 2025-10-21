@@ -30,8 +30,6 @@ public class UpdateCostumerByIdUseCase implements UpdateCostumerByIdUseCasePort 
             costumer.setName(costumerRequest.getName());
         } else if (!costumer.getCpf().equals(costumerRequest.getCpf())){
             costumer.setCpf(costumerRequest.getCpf());
-        } else if (!costumer.getEmail().equals(costumerRequest.getEmail())) {
-            costumer.setEmail(costumerRequest.getEmail());
         } else {
             throw new BadRequestException("No changes detected!");
         }

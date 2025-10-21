@@ -1,11 +1,17 @@
 package com.unifacisa.ads.rango.restaurant.adapters;
 
+import com.unifacisa.ads.rango.user.adapters.UserRequest;
+import lombok.AllArgsConstructor;
 import lombok.Data;
-import lombok.RequiredArgsConstructor;
+import lombok.NoArgsConstructor;
 
-@Data @RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
+@Data
 public class RestaurantRequest {
-    String name;
+    private String name;
 
-    String description;
+    private String description;
+
+    private UserRequest userRequest;
 }

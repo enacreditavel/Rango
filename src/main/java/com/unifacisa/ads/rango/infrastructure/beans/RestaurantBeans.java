@@ -3,6 +3,7 @@ package com.unifacisa.ads.rango.infrastructure.beans;
 import com.unifacisa.ads.rango.restaurant.core.ports.in.*;
 import com.unifacisa.ads.rango.restaurant.core.ports.out.RestaurantServicePort;
 import com.unifacisa.ads.rango.restaurant.core.usecases.*;
+import com.unifacisa.ads.rango.user.core.ports.in.CreateUserUseCasePort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -10,8 +11,8 @@ import org.springframework.context.annotation.Configuration;
 public class RestaurantBeans {
 
     @Bean
-    public CreateRestaurantUsecasePort createRestaurantUsecasePort(RestaurantServicePort restaurantServicePort){
-        return new CreateRestaurantUsecase(restaurantServicePort);
+    public CreateRestaurantUsecasePort createRestaurantUsecasePort(RestaurantServicePort restaurantServicePort, CreateUserUseCasePort createUserUseCasePort){
+        return new CreateRestaurantUsecase(restaurantServicePort, createUserUseCasePort);
     }
 
     @Bean

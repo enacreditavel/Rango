@@ -1,25 +1,30 @@
 package com.unifacisa.ads.rango.restaurant.core;
 
+import com.unifacisa.ads.rango.user.core.User;
+
 import java.time.LocalDateTime;
 import java.util.Objects;
 import java.util.UUID;
 
 public class Restaurant {
-    UUID id;
+    private UUID id;
 
-    String name;
+    private String name;
 
-    String description;
+    private String description;
 
-    LocalDateTime createdAt;
+    private User user;
+
+    private LocalDateTime createdAt;
 
     public Restaurant() {
     }
 
-    public Restaurant(UUID id, String name, String description, LocalDateTime createdAt) {
+    public Restaurant(UUID id, String name, String description, User user, LocalDateTime createdAt) {
         this.id = id;
         this.name = name;
         this.description = description;
+        this.user = user;
         this.createdAt = createdAt;
     }
 
@@ -55,6 +60,14 @@ public class Restaurant {
         this.createdAt = createdAt;
     }
 
+    public User getUser() {
+        return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
+    }
+
     @Override
     public boolean equals(Object o) {
 
@@ -74,6 +87,7 @@ public class Restaurant {
                 "id=" + id +
                 ", name='" + name + '\'' +
                 ", description='" + description + '\'' +
+                ", email='" + getUser().getEmail()+ '\'' +
                 ", createdAt=" + createdAt +
                 '}';
     }

@@ -1,8 +1,8 @@
 package com.unifacisa.ads.rango.infrastructure.beans;
 
-import com.unifacisa.ads.rango.products.core.ports.in.*;
-import com.unifacisa.ads.rango.products.core.ports.out.ProductServicePort;
-import com.unifacisa.ads.rango.products.core.usecases.*;
+import com.unifacisa.ads.rango.product.core.ports.in.*;
+import com.unifacisa.ads.rango.product.core.ports.out.ProductServicePort;
+import com.unifacisa.ads.rango.product.core.usecases.*;
 import com.unifacisa.ads.rango.restaurant.core.ports.out.RestaurantServicePort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
