@@ -1,26 +1,14 @@
 package com.unifacisa.ads.rango.product.adapters;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.unifacisa.ads.rango.product.core.ProductCategoryEnum;
 
 import java.math.BigDecimal;
-import java.util.UUID;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class ProductRequest {
-    private String name;
-
-    private String description;
-
-    private BigDecimal price;
-
-    private String imageURL;
-
-    private UUID categoriaId;
-
-    private UUID restaurantId;
+public record ProductRequest(
+    String name,
+    String description,
+    BigDecimal price,
+    ProductCategoryEnum category
+) {
 
 }

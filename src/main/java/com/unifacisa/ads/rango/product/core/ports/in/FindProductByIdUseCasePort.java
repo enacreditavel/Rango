@@ -6,5 +6,5 @@ import java.util.UUID;
 
 public interface FindProductByIdUseCasePort {
 
-    Product execute(UUID id);
+    Product execute(UUID restaurantId, UUID productId);
 }

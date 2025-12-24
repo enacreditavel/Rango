@@ -2,81 +2,57 @@ package com.unifacisa.ads.rango.product.adapters;
 
 import com.unifacisa.ads.rango.product.core.Product;
 import com.unifacisa.ads.rango.product.core.ports.in.*;
+import com.unifacisa.ads.rango.restaurant.core.ports.in.FindRestaurantByIdUseCasePort;
 import lombok.RequiredArgsConstructor;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Controller;
 
-import java.util.List;
 import java.util.UUID;
 
 @RequiredArgsConstructor
-@RestController
-@RequestMapping("/product")
+@Controller
 public class ProductController {
-    private final Logger logger = LoggerFactory.getLogger(ProductController.class);
-    private final CreateProductUseCasePort createProductUseCasePort;
-    private final FindProductByIdUseCasePort findProductByIdUseCasePort;
-    private final FindAllProductsUseCasePort findAllProductsUseCasePort;
-    private final FindProductsByRestaurantIdUseCasePort findProductsByRestaurantIdUseCasePort;
-    private final UpdateProductByIdUseCasePort updateProductByIdUseCasePort;
-    private final DeleteProductByIdUseCasePort deleteProductByIdUseCasePort;
     private final ProductMapper mapper;
 
-    @PostMapping("/{restaurantId}/{categoryId}")
-    public ResponseEntity<ProductResponse> createProduct(@PathVariable UUID restaurantId, @RequestBody ProductRequest productRequest){
-        return ResponseEntity
-                .status(HttpStatus.CREATED.value())
-                .body(mapper.productToResponse(
-                        createProductUseCasePort.execute(restaurantId,
-                                mapper.resquestToProduct(productRequest))));
+    private final CreateProductUseCasePort createProduct;
+    private final FindProductByIdUseCasePort findProductById;
+    private final FindAllProductsUseCasePort findAllProductsUseCasePort;
+    private final FindProductsByRestaurantIdUseCasePort findProductsByRestaurantId;
+    private final UpdateProductByIdUseCasePort updateProductById;
+    private final DeleteProductByIdUseCasePort deleteProductById;
+
+    private final FindRestaurantByIdUseCasePort findRestaurantById;
+
+    public ProductResponse createProduct(UUID restaurantId, ProductRequest productRequest){
+
+        Product product = createProduct.execute(
+                productRequest.name(), productRequest.description(), productRequest.price(),
+                productRequest.category(), restaurantId);
+
+        return mapper.productToResponse(product);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> findProductById(@PathVariable UUID id){
-        return ResponseEntity
-                .status(HttpStatus.OK.value())
-                .body(mapper.productToResponse(
-                        findProductByIdUseCasePort.execute(id)));
+    public ProductResponse findProductById(UUID restaurantId, UUID productId){
+        return mapper.productToResponse(findProductById.execute(restaurantId, productId));
     }
 
-    @GetMapping("/restaurant/{restaurantId}")
-    public ResponseEntity<Page<ProductResponse>> findProductsByRestaurantId(@PathVariable UUID restaurantId, @RequestParam int page, @RequestParam int size){
-        Page<Product> products = findProductsByRestaurantIdUseCasePort.execute(restaurantId, page, size);
-        List<ProductResponse> productResponseList = mapper.productListToResponse(products.getContent());
-        Page<ProductResponse> productResponsePage = new PageImpl<>(productResponseList, products.getPageable(), products.getTotalElements());
-        return ResponseEntity
-                .status(HttpStatus.OK.value())
-                .body(productResponsePage);
+    public Page<ProductResponse> findProductsByRestaurantId(UUID restaurantId, int page, int size){
+        return findProductsByRestaurantId.execute(restaurantId, page, size).map(mapper::productToResponse);
     }
 
-    @GetMapping()
-    public ResponseEntity<Page<ProductResponse>> findAllProducts(int page, int size){
-        Page<Product> products = findAllProductsUseCasePort.execute(page, size);
-        List<ProductResponse> productResponseList = mapper.productListToResponse(products.getContent());
-        Page<ProductResponse> productResponsePage = new PageImpl<>(productResponseList, products.getPageable(), products.getTotalElements());
-        return ResponseEntity
-                .status(HttpStatus.OK.value())
-                .body(productResponsePage);
+    public Page<ProductResponse> findAllProducts(Pageable pageable){
+        return findAllProductsUseCasePort.execute(pageable).map(mapper::productToResponse);
+
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> updateProductById(@PathVariable UUID id, @RequestBody ProductRequest productRequest){
-        return ResponseEntity
-                .status(HttpStatus.OK.value())
-                .body(mapper.productToResponse(
-                        updateProductByIdUseCasePort.execute(id, productRequest)));
+    public ProductResponse updateProductById(UUID restaurantId, UUID productId, ProductRequest productRequest){
+        Product product = findProductById.execute(restaurantId, productId);
+        return mapper.productToResponse(updateProductById.execute(product, productRequest));
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteProductById(@PathVariable UUID id){
-        deleteProductByIdUseCasePort.execute(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).body("Product " + id +
-                " removed successfully!");
+    public void deleteProductById(UUID restaurantId, UUID productId){
+        deleteProductById.execute(restaurantId, productId);
     }
 
 

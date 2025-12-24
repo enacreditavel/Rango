@@ -1,31 +1,19 @@
 package com.unifacisa.ads.rango.product.adapters;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.unifacisa.ads.rango.product.core.ProductCategoryEnum;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.UUID;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class ProductResponse {
-    private UUID id;
-
-    private String name;
-
-    private String description;
-
-    private BigDecimal price;
-
-    private String imageURL;
-
-    private UUID categoriaId;
-
-    private UUID restaurantId;
-
-    private LocalDateTime createdAt;
+public record ProductResponse (
+     UUID id,
+     String name,
+     String description,
+     BigDecimal price,
+     ProductCategoryEnum category,
+     UUID restaurantId,
+     LocalDateTime createdAt
+){
 
 }

@@ -1,45 +1,23 @@
 package com.unifacisa.ads.rango.product.adapters;
 
 import com.unifacisa.ads.rango.product.core.Product;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
 import java.util.List;
 
-@Component
-@RequiredArgsConstructor
-public class ProductMapper{
-    private final ModelMapper mapper;
+@Mapper(componentModel = "spring")
+public interface ProductMapper {
+    Product entityToProduct(ProductEntity productEntity);
 
-    // Entity Mapping
-    public Product entityToProduct(ProductEntity productEntity) {
-        return mapper.map(productEntity, Product.class);
-    }
+    ProductEntity productToEntity(Product product);
 
-    public ProductEntity productToEntity(Product product) {
-        return mapper.map(product, ProductEntity.class);
-    }
+    List<Product> entityListToProduct(List<ProductEntity> productEntityList);
 
-    public List<Product> entityListToProduct(List<ProductEntity> productEntityList) {
-        return productEntityList.stream().map(this::entityToProduct).toList();
-    }
+    List<ProductEntity> productListToEntity(List<Product> productList);
 
-    public List<ProductEntity> productListToEntity(List<Product> productList) {
-        return productList.stream().map(this::productToEntity).toList();
-    }
+    Product resquestToProduct(ProductRequest productRequest);
 
-    //Response Request Mapping
-    public Product resquestToProduct(ProductRequest productRequest) {
-        return mapper.map(productRequest, Product.class);
-    }
+    ProductResponse productToResponse(Product product);
 
-    public ProductResponse productToResponse(Product product) {
-        return mapper.map(product, ProductResponse.class);
-    }
-
-    public List<ProductResponse> productListToResponse(List<Product> productList) {
-        return productList.stream().map(this::productToResponse).toList();
-    }
-
+    List<ProductResponse> productListToResponse(List<Product> productList);
 }

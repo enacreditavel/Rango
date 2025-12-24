@@ -4,6 +4,7 @@ import com.unifacisa.ads.rango.product.core.Product;
 import com.unifacisa.ads.rango.product.core.ports.out.ProductServicePort;
 import com.unifacisa.ads.rango.product.core.ports.in.FindAllProductsUseCasePort;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 public class FindAllProductsUseCase implements FindAllProductsUseCasePort {
 
@@ -14,8 +15,8 @@ public class FindAllProductsUseCase implements FindAllProductsUseCasePort {
     }
 
     @Override
-    public Page<Product> execute(int page, int size) {
-        return productServicePort.findAll(page, size);
+    public Page<Product> execute(Pageable pageable) {
+        return productServicePort.findAll(pageable);
     }
 
 }

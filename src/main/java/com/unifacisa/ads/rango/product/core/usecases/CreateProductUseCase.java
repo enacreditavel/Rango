@@ -1,47 +1,39 @@
 package com.unifacisa.ads.rango.product.core.usecases;
 
-import com.unifacisa.ads.rango.infrastructure.exceptions.BadRequestException;
-import com.unifacisa.ads.rango.infrastructure.exceptions.NotFoundException;
 import com.unifacisa.ads.rango.product.core.Product;
 import com.unifacisa.ads.rango.product.core.ProductCategoryEnum;
+import com.unifacisa.ads.rango.product.core.RawImage;
 import com.unifacisa.ads.rango.product.core.ports.in.CreateProductUseCasePort;
+import com.unifacisa.ads.rango.product.core.ports.out.ProductImageStoragePort;
 import com.unifacisa.ads.rango.product.core.ports.out.ProductServicePort;
-import com.unifacisa.ads.rango.restaurant.core.ports.out.RestaurantServicePort;
 
 import java.math.BigDecimal;
-import java.time.LocalDateTime;
-import java.util.Arrays;
+import java.util.List;
 import java.util.UUID;
 
 public class CreateProductUseCase implements CreateProductUseCasePort {
 
     private final ProductServicePort productServicePort;
 
-    private final RestaurantServicePort restaurantServicePort;
+    private final ProductImageStoragePort productImageStoragePort;
 
-    public CreateProductUseCase(ProductServicePort productServicePort, RestaurantServicePort restaurantServicePort) {
+
+    public CreateProductUseCase(ProductServicePort productServicePort, ProductImageStoragePort productImageStoragePort) {
         this.productServicePort = productServicePort;
-        this.restaurantServicePort = restaurantServicePort;
+        this.productImageStoragePort = productImageStoragePort;
     }
 
     @Override
-    public Product execute(UUID restaurantId, Product product) {
-        if ( !restaurantServicePort.existsById(restaurantId) ){
-            throw new NotFoundException("Restaurant not found!");
+    public Product execute(String name, String description, BigDecimal price, ProductCategoryEnum category, UUID restaurantId, List<RawImage> images) {
+        Product product = Product.create(name, description, price, category, restaurantId);
+
+        if (images != null && !images.isEmpty()) {
+            for (RawImage img : images) {
+                // O adaptador de upload continua a fazer upload de UM ficheiro de cada vez
+                String url = productImageStoragePort.upload(img.inputStream(), img.fileName());
+                product.addImageURL(url);
+            }
         }
-
-        if (product.getPrice().compareTo(BigDecimal.ZERO) < 0) {
-            throw new BadRequestException("Price can't be negative");
-        }
-
-        if (Arrays.stream(ProductCategoryEnum.values())
-                .noneMatch(e -> e.name().equalsIgnoreCase(product.getCategory().toString()))){
-            throw new BadRequestException("Invalid category, please inform a valid category");
-        }
-
-        product.setRestaurant(restaurantServicePort.findById(restaurantId));
-
-        product.setCreatedAt(LocalDateTime.now());
 
         return productServicePort.save(product);
     }

@@ -14,7 +14,7 @@ public class FindProductByIdUseCase implements FindProductByIdUseCasePort {
     }
 
     @Override
-    public Product execute(UUID id) {
-        return productServicePort.findById(id);
+    public Product execute(UUID restaurantId, UUID productId) {
+        return productServicePort.findByProductRestaurant(restaurantId, productId);
     }
 }

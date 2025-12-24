@@ -15,10 +15,10 @@ public class DeleteProductByIdUseCase implements DeleteProductByIdUseCasePort {
     }
 
     @Override
-    public void execute(UUID id) {
-        if (!productServicePort.existsById(id)){
+    public void execute(UUID restaurant, UUID productId) {
+        if (!productServicePort.existsById(restaurant, productId)){
             throw new NotFoundException("Product not found!");
         }
-        productServicePort.deleteById(id);
+        productServicePort.deleteById(productId);
     }
 }

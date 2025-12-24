@@ -1,7 +1,6 @@
 package com.unifacisa.ads.rango.product.adapters;
 
 import com.unifacisa.ads.rango.product.core.ProductCategoryEnum;
-import com.unifacisa.ads.rango.restaurant.adapters.RestaurantEntity;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +8,8 @@ import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 @AllArgsConstructor
@@ -26,14 +27,15 @@ public class ProductEntity {
 
     private BigDecimal price;
 
-    private String imageURL;
-
     private ProductCategoryEnum category;
 
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "restaurantId")
-    private RestaurantEntity restaurantEntity;
+    private UUID restaurantId;
 
     private LocalDateTime createdAt;
+
+    @ElementCollection
+    @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
+    @Column(name = "image_url")
+    private List<String> imageUrls = new ArrayList<>();
 
 }

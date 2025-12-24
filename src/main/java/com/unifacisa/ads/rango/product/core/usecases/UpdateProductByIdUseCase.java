@@ -1,13 +1,10 @@
 package com.unifacisa.ads.rango.product.core.usecases;
 
 import com.unifacisa.ads.rango.infrastructure.exceptions.BadRequestException;
-import com.unifacisa.ads.rango.infrastructure.exceptions.NotFoundException;
 import com.unifacisa.ads.rango.product.adapters.ProductRequest;
 import com.unifacisa.ads.rango.product.core.Product;
-import com.unifacisa.ads.rango.product.core.ports.out.ProductServicePort;
 import com.unifacisa.ads.rango.product.core.ports.in.UpdateProductByIdUseCasePort;
-
-import java.util.UUID;
+import com.unifacisa.ads.rango.product.core.ports.out.ProductServicePort;
 
 public class UpdateProductByIdUseCase implements UpdateProductByIdUseCasePort {
 
@@ -18,23 +15,15 @@ public class UpdateProductByIdUseCase implements UpdateProductByIdUseCasePort {
     }
 
     @Override
-    public Product execute(UUID id, ProductRequest productRequest) {
-        if (!productServicePort.existsById(id)){
-            throw new NotFoundException("Product not found!");
-        }
-
-        Product product = productServicePort.findById(id);
-
-        if (!product.getName().equals(productRequest.getName())){
-            product.setName(productRequest.getName());
-        } else if (!product.getDescription().equals(productRequest.getDescription())) {
-            product.setDescription(productRequest.getDescription());
-        } else if (!product.getPrice().equals(productRequest.getPrice())) {
-            product.setPrice(productRequest.getPrice());
-        } else {
+    public Product execute(Product product, ProductRequest productRequest) {
+        boolean wasUpdated = product.updateProduct(
+                productRequest.name(),
+                productRequest.name(),
+                productRequest.price()
+        );
+        if (!wasUpdated) {
             throw new BadRequestException("No changes detected!");
         }
-
         return productServicePort.save(product);
     }
 }
