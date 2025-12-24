@@ -22,8 +22,6 @@ public class Product {
 
     private LocalDateTime createdAt;
 
-    private List<String> imagesURL = new ArrayList<>();
-
     public Product() {
     }
 
@@ -80,19 +78,6 @@ public class Product {
             isChanged = true;
         }
         return isChanged;
-    }
-
-    public void addImageURL(String imageURL){
-        this.imagesURL.add(imageURL);
-    }
-
-    public void removeImageURL(String imageURL){
-        this.imagesURL.remove(imageURL);
-    }
-
-
-    public List<String> getImagesURL() {
-        return imagesURL;
     }
 
     public UUID getId() {
