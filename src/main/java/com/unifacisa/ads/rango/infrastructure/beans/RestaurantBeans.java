@@ -12,7 +12,12 @@ public class RestaurantBeans {
 
     @Bean
     public CreateRestaurantUsecasePort createRestaurantUsecasePort(RestaurantServicePort restaurantServicePort, CreateUserUseCasePort createUserUseCasePort){
-        return new CreateRestaurantUsecase(restaurantServicePort, createUserUseCasePort);
+        return new CreateRestaurantUsecase(restaurantServicePort);
+    }
+
+    @Bean
+    public DeleteRestaurantByIdUseCasePort deleteRestaurantByIdUseCasePort(RestaurantServicePort restaurantServicePort){
+        return new DeleteRestaurantByIdUseCase(restaurantServicePort);
     }
 
     @Bean
@@ -26,13 +31,19 @@ public class RestaurantBeans {
     }
 
     @Bean
-    public UpdateRestaurantByIdUseCasePort updateRestaurantByIdUseCasePort(RestaurantServicePort restaurantServicePort){
-        return new UpdateRestaurantByIdUseCase(restaurantServicePort);
+    public RestaurantExistsByIdUseCasePort restaurantExistsByIdUseCasePort(RestaurantServicePort restaurantServicePort){
+        return new RestaurantExistsByIdUseCase(restaurantServicePort);
     }
 
     @Bean
-    public DeleteRestaurantByIdUseCasePort deleteRestaurantByIdUseCasePort(RestaurantServicePort restaurantServicePort){
-        return new DeleteRestaurantByIdUseCase(restaurantServicePort);
+    public RestaurantAssignUserUseCasePort restaurantAssignUserUseCasePort(RestaurantServicePort restaurantServicePort){
+        return new RestaurantAssignUserUseCase(restaurantServicePort);
     }
+
+    @Bean
+    public UpdateRestaurantUseCasePort updateRestaurantByIdUseCasePort(RestaurantServicePort restaurantServicePort){
+        return new UpdateRestaurantUseCase(restaurantServicePort);
+    }
+
 
 }

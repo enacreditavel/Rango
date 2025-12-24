@@ -21,7 +21,7 @@ public class RestaurantEntity {
 
     private String description;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     @JoinColumn(name = "user_email")
     private UserEntity userEntity;
 

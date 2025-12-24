@@ -1,6 +1,7 @@
 package com.unifacisa.ads.rango.order.core.ports.out;
 
 import com.unifacisa.ads.rango.order.core.Order;
+import com.unifacisa.ads.rango.order.core.OrderStatusEnum;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
@@ -18,4 +19,8 @@ public interface OrderServicePort {
     void deleteOrderById(UUID id);
 
     boolean existsById(UUID id);
+
+    boolean existsByRestaurantCostumerStatus(UUID costumerId, UUID restaurantId, OrderStatusEnum status);
+
+    Order findByCostumerRestaurantStatus(UUID costumerId, UUID restaurantId, OrderStatusEnum status);
 }

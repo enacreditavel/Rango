@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import io.jsonwebtoken.security.Keys;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Component
+@Slf4j
 public class JwtUtil {
     @Value("${jwt.secret}")
     private String secret;
@@ -25,10 +27,10 @@ public class JwtUtil {
 
     public String generateToken(UserDetailsImpl userDetails) {
         Map<String, Object> claims = new HashMap<>();
+        claims.put("userID", userDetails.getId().toString());
         claims.put("role", userDetails.getAuthorities().toString().replaceAll("]", "").replaceAll("\\[", ""));
-        String token = createToken(claims, userDetails.getUsername());
-        System.out.println(extractAllClaims(token));
-        return token;
+        log.info("Claims generated: creating token");
+        return createToken(claims, userDetails.getUsername());
     }
 
     private String createToken(Map<String, Object> claims, String subject) {
@@ -43,6 +45,10 @@ public class JwtUtil {
 
     public String extractRole(String token) {
         return extractAllClaims(token).get("role", String.class);
+    }
+
+    public String extractId(String token) {
+        return extractAllClaims(token).get("userID", String.class);
     }
 
     public String extractUsername(String token) {
@@ -73,6 +79,7 @@ public class JwtUtil {
 
     public Boolean validateToken(String token, UserDetailsImpl userDetails) {
         final String username = extractUsername(token);
+        log.info("Validating token");
         return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
     }
 }

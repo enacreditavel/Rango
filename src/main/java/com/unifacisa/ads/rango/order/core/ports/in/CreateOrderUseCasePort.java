@@ -1,9 +1,9 @@
 package com.unifacisa.ads.rango.order.core.ports.in;
 
+import com.unifacisa.ads.rango.costumer.core.Costumer;
 import com.unifacisa.ads.rango.order.core.Order;
-
-import java.util.UUID;
+import com.unifacisa.ads.rango.restaurant.core.Restaurant;
 
 public interface CreateOrderUseCasePort {
-    Order execute(UUID costumerId, UUID restaurantId);
+    Order execute(Costumer costumer, Restaurant restaurant);
 }

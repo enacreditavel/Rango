@@ -4,6 +4,8 @@ import com.unifacisa.ads.rango.infrastructure.exceptions.NotFoundException;
 import com.unifacisa.ads.rango.user.core.User;
 import com.unifacisa.ads.rango.user.core.ports.out.UserServicePort;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -36,22 +38,21 @@ public class UserService implements UserServicePort {
     }
 
     @Override
-    public User findByUserName(String userName) {
-        return mapper.entityToUser(userRepository.findByUserName(userName)
-                .orElseThrow(()->new NotFoundException("User not found")));
-    }
-
-    @Override
-    public boolean existsByUserName(String userName) { return userRepository.existsByUserName(userName); }
-
-    @Override
     public String encodePassword(String password){
         return passwordEncoder.encode(password);
     }
 
+    @Override
+    public void deleteById(UUID id) {
+        userRepository.deleteById(id);
+    }
 
-
-
+    @Override
+    public Page<User> findAll(Pageable pageable) {
+        Page<UserEntity> userEntityPage = userRepository.findAll(pageable);
+        if (userEntityPage.getContent().isEmpty()) throw new NotFoundException("No users found!");
+        return userEntityPage.map(mapper::entityToUser);
+    }
 
 
 }

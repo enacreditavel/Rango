@@ -1,5 +1,6 @@
 package com.unifacisa.ads.rango.restaurant.core;
 
+import com.unifacisa.ads.rango.infrastructure.exceptions.BadRequestException;
 import com.unifacisa.ads.rango.user.core.User;
 
 import java.time.LocalDateTime;
@@ -26,6 +27,52 @@ public class Restaurant {
         this.description = description;
         this.user = user;
         this.createdAt = createdAt;
+    }
+
+    public static Restaurant create(String name, String description, User user) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Restaurant name cannot be null or empty.");
+        }
+
+        if (description == null || description.trim().isEmpty()) {
+            throw new IllegalArgumentException("Restaurant description cannot be null or empty.");
+        }
+        return new Restaurant(user.getId(), name, description, user, LocalDateTime.now());
+    }
+
+    public void update(String newName, String newDescription){
+        var updated = false;
+        if (!this.name.matches(newName)){
+            changeName(newName);
+            updated = true;
+        }
+        if (!this.description.matches(newDescription)) {
+            changeDescription(description);
+            updated = true;
+        }
+
+        if(!updated) throw new BadRequestException("No changes detected");
+    }
+
+    private void changeName(String newName) {
+        if (newName == null || newName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Restaurant name cannot be null or empty.");
+        }
+        this.name = newName;
+    }
+
+    private void changeDescription(String newDescription) {
+        if (newDescription == null || newDescription.trim().isEmpty()) {
+            throw new IllegalArgumentException("Restaurant description cannot be null or empty.");
+        }
+        this.name = newDescription;
+    }
+
+    public void assignUser(User newUser) {
+        if (newUser == null) {
+            throw new IllegalArgumentException("User cannot be null.");
+        }
+        this.user = newUser;
     }
 
     public UUID getId() {

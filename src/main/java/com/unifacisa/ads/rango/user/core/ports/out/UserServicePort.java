@@ -1,20 +1,23 @@
 package com.unifacisa.ads.rango.user.core.ports.out;
 
 import com.unifacisa.ads.rango.user.core.User;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 import java.util.UUID;
 
 public interface UserServicePort {
-    public User save(User user);
+    User save(User user);
 
-    public User findByEmail(String email);
+    User findByEmail(String email);
 
-    public boolean existsByEmail(String email);
-    public boolean existsByUserName(String userName);
+    boolean existsByEmail(String email);
 
-    public User findById(UUID id);
+    User findById(UUID id);
 
-    public User findByUserName(String userName);
+    String encodePassword(String password);
 
-    public String encodePassword(String password);
+    void deleteById(UUID id);
+
+    Page<User> findAll(Pageable pageable);
 }

@@ -1,8 +1,7 @@
 package com.unifacisa.ads.rango.costumer.core.usecases;
 
-import com.unifacisa.ads.rango.costumer.core.ports.out.CostumerServicePort;
 import com.unifacisa.ads.rango.costumer.core.ports.in.DeleteCostumerByIdUseCasePort;
-import com.unifacisa.ads.rango.infrastructure.exceptions.NotFoundException;
+import com.unifacisa.ads.rango.costumer.core.ports.out.CostumerServicePort;
 
 import java.util.UUID;
 
@@ -16,10 +15,7 @@ public class DeleteCostumerByIdUseCase implements DeleteCostumerByIdUseCasePort 
 
     @Override
     public void execute(UUID id) {
-        if (!costumerServicePort.existsById(id)) {
-            throw new NotFoundException("User with id " + id +
-                    " doesn't exist");
-        }
+
         costumerServicePort.deleteById(id);
 
     }

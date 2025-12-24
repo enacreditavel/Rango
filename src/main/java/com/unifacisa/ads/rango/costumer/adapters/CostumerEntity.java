@@ -21,8 +21,8 @@ public class CostumerEntity {
 
     private String cpf;
 
-    @OneToOne
-    @JoinColumn(name = "userId")
+    @OneToOne(cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @JoinColumn(name = "user_id")
     private UserEntity userEntity;
 
     private LocalDateTime createdAt;

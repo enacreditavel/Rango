@@ -1,30 +1,32 @@
 package com.unifacisa.ads.rango.order.adapters;
 
-import com.unifacisa.ads.rango.costumer.core.Costumer;
-import com.unifacisa.ads.rango.order.core.StatusOrderEnum;
-import com.unifacisa.ads.rango.restaurant.core.Restaurant;
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import com.unifacisa.ads.rango.costumer.adapters.CostumerResponse;
+import com.unifacisa.ads.rango.item.adapters.ItemResponse;
+import com.unifacisa.ads.rango.order.core.OrderStatusEnum;
+import com.unifacisa.ads.rango.restaurant.adapters.RestaurantResponse;
 
+import java.math.BigDecimal;
 import java.time.LocalDateTime;
+import java.util.List;
 import java.util.UUID;
 
-@AllArgsConstructor
-@NoArgsConstructor
-@Data
-public class OrderResponse {
+public record OrderResponse (
 
-    UUID id;
+    UUID id,
 
-    Costumer costumer;
+    CostumerResponse costumerResponse,
 
-    Restaurant restaurant;
+     RestaurantResponse restaurantResponse,
 
-    StatusOrderEnum statusOrderEnum;
+     List<ItemResponse> itemResponseList,
 
-    LocalDateTime createdAt;
+     OrderStatusEnum orderStatus,
 
-    LocalDateTime updatedAt;
+     LocalDateTime createdAt,
+
+     LocalDateTime updatedAt,
+
+     BigDecimal totalValue
+){
 
 }

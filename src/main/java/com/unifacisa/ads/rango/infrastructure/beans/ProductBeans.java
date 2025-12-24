@@ -1,6 +1,7 @@
 package com.unifacisa.ads.rango.infrastructure.beans;
 
 import com.unifacisa.ads.rango.product.core.ports.in.*;
+import com.unifacisa.ads.rango.product.core.ports.out.ProductImageStoragePort;
 import com.unifacisa.ads.rango.product.core.ports.out.ProductServicePort;
 import com.unifacisa.ads.rango.product.core.usecases.*;
 import com.unifacisa.ads.rango.restaurant.core.ports.out.RestaurantServicePort;
@@ -11,8 +12,8 @@ import org.springframework.context.annotation.Configuration;
 public class ProductBeans {
 
     @Bean
-    public CreateProductUseCasePort createProductUseCasePort(ProductServicePort productServicePort, RestaurantServicePort restaurantServicePort){
-        return new  CreateProductUseCase(productServicePort, restaurantServicePort);
+    public CreateProductUseCasePort createProductUseCasePort(ProductServicePort productServicePort, ProductImageStoragePort productImageStoragePort){
+        return new  CreateProductUseCase(productServicePort, productImageStoragePort);
     }
 
     @Bean

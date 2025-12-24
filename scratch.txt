@@ -1,0 +1,33 @@
+Não gostei dessa documentação, quero criar tudo novamente começando do início. Antes disso, quero deixar gravada a arquitetura e o conjunto de classes utilizadas:
+
+Arquitetura: o Rango é criado em arquitetura hexagonal com a seguinte estrutura de pastas e classes
+
+Cada classe, que estão listadas abaixo, possui as pastas adapters e core.
+Adapters contém:
+    API (onde ficam os endpoints),
+    Request (DTO para requisições à API)
+    Response (DTO para respostas às requisições da API)
+    Controller (Adaptador de entrada que se comunica com UseCases através de suas respectivas portas)
+    Mapper (Realiza o mapeamento da classe Domain para Request, Response e Entity)
+    Entity (Classe utilizada para persistencia de dados)
+    Service (Adaptador de saída que se comunica com Repository na persistencia dos dados)
+    Repository (Comunicação direta com a base de dados, extendendo JPA Repository)
+
+Core contém:
+    Ports (Portas de entrada (in) que conversam com os UseCases, e de saída (out) que comunicam com a Service)
+    UseCases (Recebe as requisições da Controller, aplica as regras de negócio da Domain, e utiliza a Service, através das portas de saída para persistencia)
+    Domain (Contém as regras de negócio da aplicação, e realiza as validações)
+
+Classes: User, Costumer, Restaurant, Product, Item, Order, Payment.
+
+User contém id, email, password, role;
+Costumer contém id, name, CPF, user, createdAt;
+Restaurant contém id, name, description, user, createdAt;
+Product contém id, name, description, price, category, Restaurant, createdAt;
+Item contém product, quantity, unitPrice; Na persistencia, ItemEntity é Embeddable.
+Order contém id, Costumer, Restaurant, List<Item>, orderStatus, createdAt, updatedAt, totalValue; List<ItemEntity> na persistencia é Embedded;
+Payment contém id, Order, method, status, value, createdAt.
+
+Por fim, há uma pasta infrastructure, contendo os beans, as exceptions, e a configuração de segurança da aplicação, que justifica a utilização de uma classe User, fundamental para autenticação dos usuários na aplicação
+
+Com base em todas as informações passadas, quero que atue no papel de Product Owner e desenvolva todos os épicos e histórias de usuários necessárias para o backlog do projeto no JIRA.

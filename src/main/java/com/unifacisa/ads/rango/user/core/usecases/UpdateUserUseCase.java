@@ -20,10 +20,10 @@ public class UpdateUserUseCase implements UpdateUserUseCasePort {
     public void execute(UUID id, UserRequest userRequest) {
         User user = userServicePort.findById(id);
 
-        if (!user.getEmail().isBlank() && !user.getEmail().equals(userRequest.getEmail())){
-            user.setEmail(userRequest.getEmail());
-        } else if (!userRequest.getPassword().isBlank()) {
-            user.setPassword(userServicePort.encodePassword(userRequest.getPassword()));
+        if (!user.getEmail().isBlank() && !user.getEmail().equals(userRequest.email())){
+            user.setEmail(userRequest.email());
+        } else if (!userRequest.password().isBlank()) {
+            user.setPassword(userServicePort.encodePassword(userRequest.password()));
         } else {
             throw new BadRequestException("No changes detected!");
         }

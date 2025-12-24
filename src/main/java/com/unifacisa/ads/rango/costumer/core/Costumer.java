@@ -1,5 +1,6 @@
 package com.unifacisa.ads.rango.costumer.core;
 
+import com.unifacisa.ads.rango.infrastructure.exceptions.BadRequestException;
 import com.unifacisa.ads.rango.user.core.User;
 
 import java.time.LocalDateTime;
@@ -27,6 +28,98 @@ public class Costumer {
         this.cpf = cpf;
         this.user = user;
         this.createdAt = createdAt;
+    }
+
+
+    public static Costumer create(String name, String cpf, User user) {
+        if (name == null || name.trim().isEmpty()) {
+            throw new IllegalArgumentException("Customer name cannot be null or empty.");
+        }
+        if (!isValidCpf(cpf)) {
+            throw new IllegalArgumentException("Invalid CPF.");
+        }
+        if (user == null) {
+            throw new IllegalArgumentException("User cannot be null.");
+        }
+
+        return new Costumer(user.getId(), name, cpf, user, LocalDateTime.now());
+    }
+
+    public void update(String newName){
+        var updated = false;
+
+        if (!this.name.matches(newName)){
+            changeName(newName);
+            updated = true;
+        }
+
+        if(!updated) throw new BadRequestException("No changes detected");
+
+    }
+
+
+    private void changeName(String newName) {
+        if (newName == null || newName.trim().isEmpty()) {
+            throw new IllegalArgumentException("Customer name cannot be null or empty.");
+        }
+        this.name = newName;
+    }
+
+    /**
+     * Behavior to correct/change the CPF.
+     */
+//    public void changeCpf(String newCpf) {
+//        if (newCpf == null || !isValidCpf(newCpf)) {
+//            throw new IllegalArgumentException("Invalid CPF.");
+//        }
+//       Ex: Business rule - can only change the CPF if the current one is null
+//         if (this.cpf != null) {
+//            throw new BadRequestException("CPF cannot be changed once set.");
+//         }
+//        this.cpf = newCpf;
+//    }
+//
+    public void assignUser(User newUser) {
+        if (newUser == null) {
+            throw new IllegalArgumentException("User cannot be null.");
+        }
+        this.user = newUser;
+    }
+
+    public static boolean isValidCpf(String cpf) {
+        if (cpf == null) return false;
+
+        // Removes everything that is not digit
+        String digits = cpf.replaceAll("\\D", "");
+        if (digits.length() != 11) return false;
+
+        // Rejects CPFs with all the same digits (ex.: 00000000000, 11111111111, ...)
+        if (digits.chars().distinct().count() == 1) return false;
+
+        try {
+            int[] nums = new int[11];
+            for (int i = 0; i < 11; i++) nums[i] = Character.digit(digits.charAt(i), 10);
+
+            // Calculates first check digit (pos 9)
+            int sum = 0;
+            for (int i = 0; i < 9; i++) {
+                sum += nums[i] * (10 - i);
+            }
+            int rem = sum % 11;
+            int dv1 = (rem < 2) ? 0 : 11 - rem;
+            if (nums[9] != dv1) return false;
+
+            // Calculate second digit checker (pos 10)
+            sum = 0;
+            for (int i = 0; i < 10; i++) {
+                sum += nums[i] * (11 - i);
+            }
+            rem = sum % 11;
+            int dv2 = (rem < 2) ? 0 : 11 - rem;
+            return nums[10] == dv2;
+        } catch (NumberFormatException e) {
+            return false;
+        }
     }
 
     public UUID getId() {

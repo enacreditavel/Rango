@@ -1,64 +1,69 @@
 package com.unifacisa.ads.rango.restaurant.adapters;
 
 
+import com.unifacisa.ads.rango.infrastructure.exceptions.BadRequestException;
+import com.unifacisa.ads.rango.infrastructure.exceptions.NotFoundException;
+import com.unifacisa.ads.rango.restaurant.core.Restaurant;
 import com.unifacisa.ads.rango.restaurant.core.ports.in.*;
-import com.unifacisa.ads.rango.user.adapters.UserMapper;
+import com.unifacisa.ads.rango.user.adapters.UserController;
+import com.unifacisa.ads.rango.user.core.User;
+import com.unifacisa.ads.rango.user.core.ports.in.DeleteUserByIdUseCasePort;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.data.domain.Pageable;
+import org.springframework.web.bind.annotation.RestController;
 
 import java.util.UUID;
 
-@RestController
-@RequestMapping("/restaurant")
 @RequiredArgsConstructor
+@RestController
 public class RestaurantController {
+
+    private final RestaurantMapper mapper;
+
+    private final UserController userController;
+    private final DeleteUserByIdUseCasePort deleteUserByIdUseCasePort;
 
     private final CreateRestaurantUsecasePort createRestaurantUsecasePort;
     private final FindRestaurantByIdUseCasePort findRestaurantByIdUseCasePort;
     private final FindAllRestaurantsUseCasePort findAllRestaurantsUseCasePort;
-    private final UpdateRestaurantByIdUseCasePort updateRestaurantByIdUseCasePort;
+    private final UpdateRestaurantUseCasePort updateRestaurantUseCasePort;
     private final DeleteRestaurantByIdUseCasePort deleteRestaurantByIdUseCasePort;
+    private final RestaurantExistsByIdUseCasePort restaurantExistsByIdUseCasePort;
+    private final RestaurantAssignUserUseCasePort restaurantAssignUserUseCasePort;
 
-    private final RestaurantMapper mapper;
-    private final UserMapper userMapper;
 
-    @PostMapping
-    public ResponseEntity<RestaurantResponse> createRestaurant(@RequestBody RestaurantRequest restaurantRequest){
-        return ResponseEntity
-                .status(HttpStatus.CREATED.value())
-                .body(mapper.restaurantToResponse(
-                        createRestaurantUsecasePort.execute(
-                                mapper.requestToRestaurant(restaurantRequest))));
+    @Transactional
+    public RestaurantResponse createRestaurant(RestaurantRequest restaurantRequest){
+        User user = userController.findUserByEmail(restaurantRequest.getEmail());
+        if (user.getAssignedId() != null) throw new BadRequestException("This user already is assigned to another costumer or restaurant!");
+        Restaurant restaurant = createRestaurantUsecasePort.execute(restaurantRequest.getName(), restaurantRequest.getDescription(), user);
+        user = userController.assignUser(user, restaurant.getId());
+        restaurant = restaurantAssignUserUseCasePort.execute(restaurant, user);
+        return mapper.restaurantToResponse(restaurant);
     }
 
-    @GetMapping("/{id}")
-    public ResponseEntity<RestaurantResponse> findRestaurantById(@PathVariable UUID id){
-        return ResponseEntity
-                .status(HttpStatus.OK.value())
-                .body(mapper.restaurantToResponse(findRestaurantByIdUseCasePort.execute(id)));
+    public RestaurantResponse findRestaurantById(UUID id){
+        return mapper.restaurantToResponse(findRestaurantByIdUseCasePort.execute(id));
     }
 
-    @GetMapping
-    public ResponseEntity<Page<RestaurantResponse>> findAllRestaurants(@RequestParam int page, @RequestParam int size ){
-        return ResponseEntity
-                .status(HttpStatus.OK.value())
-                .body(findAllRestaurantsUseCasePort.execute(page, size).map(mapper::restaurantToResponse));
+    public Page<RestaurantResponse> findAllRestaurants(Pageable pageable) {
+        return findAllRestaurantsUseCasePort.execute(pageable).map(mapper::restaurantToResponse);
     }
 
-    @DeleteMapping("/{id}")
-    public ResponseEntity<String> deleteRestaurant(@PathVariable UUID id){
+    @Transactional
+    public void deleteRestaurantById(UUID id){
+        if (!restaurantExistsByIdUseCasePort.execute(id)) throw new NotFoundException("Restaurant with id "+id+" doesn't exist");
         deleteRestaurantByIdUseCasePort.execute(id);
-        return ResponseEntity.status(HttpStatus.NO_CONTENT.value()).body("Restaurant removed successfully");
+        deleteUserByIdUseCasePort.execute(id);
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<RestaurantResponse> updateRestaurant(@PathVariable UUID id, @RequestBody RestaurantRequest restaurantRequest){
-        return ResponseEntity.status(HttpStatus.OK.value())
-                             .body(mapper.restaurantToResponse(
-                                     updateRestaurantByIdUseCasePort.execute(id, restaurantRequest)));
+    @Transactional
+    public RestaurantResponse updateRestaurantById(UUID id, RestaurantRequest restaurantRequest){
+        Restaurant restaurant = findRestaurantByIdUseCasePort.execute(id);
+        return mapper.restaurantToResponse(updateRestaurantUseCasePort.execute(restaurant, restaurantRequest.getName(), restaurantRequest.getDescription()));
     }
+
 
 }

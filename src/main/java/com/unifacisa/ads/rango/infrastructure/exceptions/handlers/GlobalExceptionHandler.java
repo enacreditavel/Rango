@@ -20,7 +20,7 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(BadRequestException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ErrorResponse handleBadRequestException(NotFoundException ex) {
+    public ErrorResponse handleBadRequestException(BadRequestException ex) {
         return new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 
@@ -39,6 +39,12 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(BadCredentialsException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public ErrorResponse handleFeignGatewayTimeOutException(BadCredentialsException ex) {
+        return new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
+    }
+
+    @ExceptionHandler(IllegalArgumentException.class)
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    public ErrorResponse handleIllegalArgumentException(IllegalArgumentException ex) {
         return new ErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST.value());
     }
 

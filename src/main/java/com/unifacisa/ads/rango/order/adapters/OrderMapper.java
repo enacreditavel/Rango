@@ -1,33 +1,41 @@
 package com.unifacisa.ads.rango.order.adapters;
 
+import com.unifacisa.ads.rango.costumer.adapters.CostumerMapper;
+import com.unifacisa.ads.rango.item.adapters.ItemMapper;
 import com.unifacisa.ads.rango.order.core.Order;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
+import com.unifacisa.ads.rango.restaurant.adapters.RestaurantMapper;
+import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 import java.util.List;
 
-@Component @RequiredArgsConstructor
-public class OrderMapper {
-    private final ModelMapper mapper;
+@Mapper(componentModel = "spring", uses = {
+        CostumerMapper.class,
+        RestaurantMapper.class,
+        ItemMapper.class
+})
+public interface OrderMapper {
 
-    public Order entityToOrder(OrderEntity orderEntity){
-        return  mapper.map(orderEntity, Order.class);
-    }
-    public OrderEntity orderToEntity(Order order){
-        return mapper.map(order, OrderEntity.class);
-    }
+    @Mapping(source = "costumerEntity", target = "costumer")
+    @Mapping(source = "restaurantEntity", target = "restaurant")
+    @Mapping(source = "itemEntityList", target = "items")
+    @Mapping(source = "orderStatus", target = "orderStatus")
+    Order entityToOrder(OrderEntity orderEntity);
 
-    public OrderResponse orderToResponse(Order order){
-        return mapper.map(order, OrderResponse.class);
-    }
+    @Mapping(source = "costumer", target = "costumerEntity")
+    @Mapping(source = "restaurant", target = "restaurantEntity")
+    @Mapping(source = "items", target = "itemEntityList")
+    @Mapping(source = "orderStatus", target = "orderStatus")
+    OrderEntity orderToEntity(Order order);
 
-    public List<OrderResponse> orderListToResponse(List<Order> orderList) {
-        return orderList.stream().map(this::orderToResponse).toList();
-    }
+    @Mapping(source = "costumer", target = "costumerResponse")
+    @Mapping(source = "restaurant", target = "restaurantResponse")
+    @Mapping(source = "items", target = "itemResponseList")
+    @Mapping(source = "orderStatus", target = "orderStatus")
+    OrderResponse orderToResponse(Order order);
 
-    public List<Order> entityListToOrder(List<OrderEntity> orderEntityList) {
-        return orderEntityList.stream().map(this::entityToOrder).toList();
-    }
+    List<OrderResponse> orderListToResponse(List<Order> orderList);
+
+    List<Order> entityListToOrder(List<OrderEntity> orderEntityList);
 }
 

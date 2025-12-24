@@ -3,7 +3,6 @@ package com.unifacisa.ads.rango.infrastructure.beans;
 import com.unifacisa.ads.rango.costumer.core.ports.in.*;
 import com.unifacisa.ads.rango.costumer.core.ports.out.CostumerServicePort;
 import com.unifacisa.ads.rango.costumer.core.usecases.*;
-import com.unifacisa.ads.rango.user.core.ports.in.CreateUserUseCasePort;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -11,8 +10,28 @@ import org.springframework.context.annotation.Configuration;
 public class CostumerBeans {
 
     @Bean
-    public CreateCostumerUseCasePort costumerUseCasePort(CostumerServicePort costumerServicePort,  CreateUserUseCasePort createUserUseCasePort){
-        return new CreateCostumerUseCase(costumerServicePort, createUserUseCasePort);
+    public CreateCostumerUseCasePort createCostumerUseCasePort(CostumerServicePort costumerServicePort){
+        return new CreateCostumerUseCase(costumerServicePort);
+    }
+
+    @Bean
+    public CostumerAssignUserUseCasePort costumerAssignUserUseCasePort(CostumerServicePort costumerServicePort){
+        return new CostumerAssignUserUseCase(costumerServicePort);
+    }
+
+    @Bean
+    public CostumerExistsByCpfUseCasePort costumerExistsByCpfUseCasePort(CostumerServicePort costumerServicePort){
+        return new CostumerExistsByCpfUseCase(costumerServicePort);
+    }
+
+    @Bean
+    public CostumerExistsByIdUseCasePort costumerExistsByIdUseCasePort(CostumerServicePort costumerServicePort){
+        return new CostumerExistsByIdUseCase(costumerServicePort);
+    }
+
+    @Bean
+    public FindAllCostumersUseCasePort findAllCostumersUseCasePort(CostumerServicePort costumerServicePort){
+        return new FindAllCostumersUseCase(costumerServicePort);
     }
 
     @Bean
@@ -26,8 +45,8 @@ public class CostumerBeans {
     }
 
     @Bean
-    public UpdateCostumerByIdUseCasePort updateCostumerByIdUseCasePort(CostumerServicePort costumerServicePort){
-        return new UpdateCostumerByIdUseCase(costumerServicePort);
+    public UpdateCostumerUseCasePort updateCostumerByIdUseCasePort(CostumerServicePort costumerServicePort){
+        return new UpdateCostumerUseCase(costumerServicePort);
     }
 
     @Bean

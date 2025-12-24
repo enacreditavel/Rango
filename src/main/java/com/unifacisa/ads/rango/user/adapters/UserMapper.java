@@ -1,29 +1,19 @@
 package com.unifacisa.ads.rango.user.adapters;
 
 import com.unifacisa.ads.rango.user.core.User;
-import lombok.RequiredArgsConstructor;
-import org.modelmapper.ModelMapper;
-import org.springframework.stereotype.Component;
+import org.mapstruct.Mapper;
 
 import java.util.List;
-@RequiredArgsConstructor
-@Component
-public class UserMapper {
+@Mapper(componentModel = "spring")
+public interface UserMapper {
 
-    private final ModelMapper mapper;
+    User entityToUser(UserEntity userEntity);
 
-    public User entityToUser(UserEntity userEntity){
-        return  mapper.map(userEntity, User.class);
-    }
-    public UserEntity userToEntity(User user){
-        return mapper.map(user, UserEntity.class);
-    }
+    UserEntity userToEntity(User user);
 
-    public User requestToUser(UserRequest userRequest){
-        return  mapper.map(userRequest, User.class);
-    }
+    User requestToUser(UserRequest userRequest);
 
-    public List<User> entityListToUser(List<UserEntity> userEntityList) {
-        return userEntityList.stream().map(this::entityToUser).toList();
-    }
+    List<User> entityListToUser(List<UserEntity> userEntityList);
+
+    UserResponse userToResponse(User user);
 }

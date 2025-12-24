@@ -5,7 +5,7 @@ import com.unifacisa.ads.rango.restaurant.core.Restaurant;
 import com.unifacisa.ads.rango.restaurant.core.ports.out.RestaurantServicePort;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -34,8 +34,8 @@ public class RestaurantService implements RestaurantServicePort {
     }
 
     @Override
-    public Page<Restaurant> findAll(int page, int size) {
-        Page<RestaurantEntity> restaurantEntityPage = restaurantRepository.findAll(PageRequest.of(page, size));
+    public Page<Restaurant> findAll(Pageable pageable) {
+        Page<RestaurantEntity> restaurantEntityPage = restaurantRepository.findAll(pageable);
         if (restaurantEntityPage.getContent().isEmpty()) {
             throw new NotFoundException("No restaurants found!");
         }

@@ -6,6 +6,8 @@ import com.unifacisa.ads.rango.infrastructure.exceptions.NotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.util.UUID;
@@ -45,6 +47,19 @@ public class CostumerService implements CostumerServicePort {
         return mapper.entityToCostumer(costumerEntity);
     }
 
+//    @Override
+//    public boolean existsByUserEmail(String email) {
+//        return false;
+//    }
+//
+//    @Override
+//    public Costumer findByUserEmail(String email) {
+//        CostumerEntity costumerEntity = costumerRepository.findByUserEmail(email)
+//                .orElse(null);
+//        return mapper.entityToCostumer(costumerEntity
+//        );
+//    }
+
     @Override
     public boolean existsByCpf(String cpf) {
         return costumerRepository.existsByCpf(cpf);
@@ -53,6 +68,13 @@ public class CostumerService implements CostumerServicePort {
     @Override
     public void deleteById(UUID id) {
         costumerRepository.deleteById(id);
+    }
+
+    @Override
+    public Page<Costumer> findAll(Pageable pageable) {
+        Page<CostumerEntity> costumerEntityPage = costumerRepository.findAll(pageable);
+        if (costumerEntityPage.getContent().isEmpty()) throw new NotFoundException("No costumers found!");
+        return costumerEntityPage.map(mapper::entityToCostumer);
     }
 
 }
