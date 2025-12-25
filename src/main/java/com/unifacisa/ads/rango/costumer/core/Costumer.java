@@ -31,6 +31,12 @@ public class Costumer {
     }
 
 
+    /**
+     * Creates a new Costumer instance.
+     * @param name The name of the customer. Cannot be null or empty.
+     * @param cpf The CPF of the customer. Must be a valid CPF.
+     * @param user The user associated with this customer. Cannot be null.
+     */
     public static Costumer create(String name, String cpf, User user) {
         if (name == null || name.trim().isEmpty()) {
             throw new IllegalArgumentException("Customer name cannot be null or empty.");
@@ -45,6 +51,9 @@ public class Costumer {
         return new Costumer(user.getId(), name, cpf, user, LocalDateTime.now());
     }
 
+    /**
+     * Updates the customer's information.
+     */
     public void update(String newName){
         var updated = false;
 
@@ -58,6 +67,10 @@ public class Costumer {
     }
 
 
+    /**
+     * Changes the name of the customer.
+     * @param newName The new name for the customer. Cannot be null or empty.
+     */
     private void changeName(String newName) {
         if (newName == null || newName.trim().isEmpty()) {
             throw new IllegalArgumentException("Customer name cannot be null or empty.");
@@ -66,19 +79,9 @@ public class Costumer {
     }
 
     /**
-     * Behavior to correct/change the CPF.
+     * Assigns a user to this customer.
+     * @param newUser The user to assign. Cannot be null.
      */
-//    public void changeCpf(String newCpf) {
-//        if (newCpf == null || !isValidCpf(newCpf)) {
-//            throw new IllegalArgumentException("Invalid CPF.");
-//        }
-//       Ex: Business rule - can only change the CPF if the current one is null
-//         if (this.cpf != null) {
-//            throw new BadRequestException("CPF cannot be changed once set.");
-//         }
-//        this.cpf = newCpf;
-//    }
-//
     public void assignUser(User newUser) {
         if (newUser == null) {
             throw new IllegalArgumentException("User cannot be null.");
@@ -86,6 +89,9 @@ public class Costumer {
         this.user = newUser;
     }
 
+    /**
+     * Validates a CPF (Cadastro de Pessoas Físicas) number.
+     */
     public static boolean isValidCpf(String cpf) {
         if (cpf == null) return false;
 
